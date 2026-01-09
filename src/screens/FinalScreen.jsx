@@ -19,12 +19,29 @@ function FinalScreen({ className = '' }) {
   }
 
   useEffect(() => {
-    if (!noButtonRef.current || !containerRef.current || response || showIntro) return
+    if (response || showIntro) return
+    
+    // Attendre que les refs soient disponibles
+    if (!noButtonRef.current || !containerRef.current) {
+      // Réessayer après un court délai
+      const timer = setTimeout(() => {
+        if (noButtonRef.current && containerRef.current) {
+          const containerRect = containerRef.current.getBoundingClientRect()
+          if (noButtonPosition.x === 0 && noButtonPosition.y === 0) {
+            setNoButtonPosition({ 
+              x: containerRect.width / 2, 
+              y: containerRect.height / 2 
+            })
+          }
+        }
+      }, 100)
+      return () => clearTimeout(timer)
+    }
 
     let mouseX = 0
     let mouseY = 0
-    let currentX = noButtonPosition.x
-    let currentY = noButtonPosition.y
+    let currentX = noButtonPosition.x || 0
+    let currentY = noButtonPosition.y || 0
 
     const handleMouseMove = (e) => {
       const container = containerRef.current
@@ -82,14 +99,18 @@ function FinalScreen({ className = '' }) {
 
     const container = containerRef.current
     if (container) {
-      // Initialiser la position en pixels
+      // Initialiser la position en pixels si nécessaire
       const containerRect = container.getBoundingClientRect()
-      if (noButtonPosition.x === 0 && noButtonPosition.y === 0) {
+      if ((noButtonPosition.x === 0 && noButtonPosition.y === 0) || 
+          noButtonPosition.x === undefined || noButtonPosition.y === undefined) {
         const initialX = containerRect.width / 2
         const initialY = containerRect.height / 2
         setNoButtonPosition({ x: initialX, y: initialY })
         currentX = initialX
         currentY = initialY
+      } else {
+        currentX = noButtonPosition.x
+        currentY = noButtonPosition.y
       }
       
       container.addEventListener('mousemove', handleMouseMove)
@@ -102,7 +123,7 @@ function FinalScreen({ className = '' }) {
         }
       }
     }
-  }, [response, showIntro, isFleeing])
+  }, [response, showIntro])
 
   const handleNoClick = (e) => {
     // Empêcher le clic si le bouton est en train de fuir
