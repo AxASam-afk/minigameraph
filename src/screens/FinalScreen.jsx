@@ -3,10 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 function FinalScreen({ className = '' }) {
   const [response, setResponse] = useState(null)
   const [showIntro, setShowIntro] = useState(true)
-  const [noButtonPosition, setNoButtonPosition] = useState({ 
-    x: 50 + (Math.random() - 0.5) * 20, 
-    y: 50 + (Math.random() - 0.5) * 20 
-  })
+  const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
   const [isFleeing, setIsFleeing] = useState(false)
   const noButtonRef = useRef(null)
   const containerRef = useRef(null)
@@ -60,9 +57,9 @@ function FinalScreen({ className = '' }) {
         const angle = Math.atan2(mouseY - buttonCenterY, mouseX - buttonCenterX)
         
         // Vitesse de fuite (plus la souris est proche, plus vite il fuit)
-        const speed = Math.max(3, (150 - distance) / 10)
+        const speed = Math.max(3, (150 - distance) / 8)
         
-        // Déplacer le bouton dans la direction opposée
+        // Déplacer le bouton dans la direction opposée (en pixels)
         currentX -= Math.cos(angle) * speed
         currentY -= Math.sin(angle) * speed
         
@@ -84,6 +81,16 @@ function FinalScreen({ className = '' }) {
 
     const container = containerRef.current
     if (container) {
+      // Initialiser la position en pixels
+      const containerRect = container.getBoundingClientRect()
+      if (noButtonPosition.x === 0 && noButtonPosition.y === 0) {
+        const initialX = containerRect.width / 2
+        const initialY = containerRect.height / 2
+        setNoButtonPosition({ x: initialX, y: initialY })
+        currentX = initialX
+        currentY = initialY
+      }
+      
       container.addEventListener('mousemove', handleMouseMove)
       animationFrameRef.current = requestAnimationFrame(animate)
       
@@ -94,7 +101,7 @@ function FinalScreen({ className = '' }) {
         }
       }
     }
-  }, [response, showIntro, noButtonPosition.x, noButtonPosition.y, isFleeing])
+  }, [response, showIntro, isFleeing])
 
   const handleNoClick = (e) => {
     // Empêcher le clic si le bouton est en train de fuir
@@ -267,8 +274,8 @@ function FinalScreen({ className = '' }) {
             onClick={handleNoClick}
             className="absolute bg-gray-200 text-gray-700 font-semibold py-4 px-8 rounded-xl hover:bg-gray-300 shadow-lg text-lg cursor-pointer select-none"
             style={{
-              left: `${noButtonPosition.x}%`,
-              top: `${noButtonPosition.y}%`,
+              left: `${noButtonPosition.x}px`,
+              top: `${noButtonPosition.y}px`,
               transform: 'translate(-50%, -50%)',
               zIndex: 50,
               minWidth: '200px',
