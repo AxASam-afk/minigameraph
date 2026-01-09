@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 function FinalScreen({ className = '' }) {
   const [response, setResponse] = useState(null)
   const [showIntro, setShowIntro] = useState(true)
+  const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
+  const [isFleeing, setIsFleeing] = useState(false)
+  const noButtonRef = useRef(null)
+  const containerRef = useRef(null)
 
   const handleResponse = (res) => {
     setResponse(res)
@@ -11,6 +15,76 @@ function FinalScreen({ className = '' }) {
   const handleReset = () => {
     localStorage.removeItem('minigame_progress')
     window.location.reload()
+  }
+
+  useEffect(() => {
+    if (!noButtonRef.current || !containerRef.current) return
+
+    const handleMouseMove = (e) => {
+      if (response || showIntro) return
+
+      const button = noButtonRef.current
+      const container = containerRef.current
+      if (!button || !container) return
+
+      const buttonRect = button.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+      
+      const mouseX = e.clientX - containerRect.left
+      const mouseY = e.clientY - containerRect.top
+      
+      const buttonCenterX = buttonRect.left - containerRect.left + buttonRect.width / 2
+      const buttonCenterY = buttonRect.top - containerRect.top + buttonRect.height / 2
+      
+      const distance = Math.sqrt(
+        Math.pow(mouseX - buttonCenterX, 2) + Math.pow(mouseY - buttonCenterY, 2)
+      )
+      
+      // Si la souris est proche du bouton (moins de 100px)
+      if (distance < 100 && !isFleeing) {
+        setIsFleeing(true)
+        
+        // Calculer la direction opposée à la souris
+        const angle = Math.atan2(mouseY - buttonCenterY, mouseX - buttonCenterX)
+        const fleeDistance = 150
+        
+        // Limiter le mouvement dans le conteneur
+        const maxX = containerRect.width - buttonRect.width - 20
+        const maxY = containerRect.height - buttonRect.height - 20
+        
+        const newX = Math.max(20, Math.min(maxX, buttonCenterX - Math.cos(angle) * fleeDistance))
+        const newY = Math.max(20, Math.min(maxY, buttonCenterY - Math.sin(angle) * fleeDistance))
+        
+        setNoButtonPosition({
+          x: newX - buttonRect.width / 2,
+          y: newY - buttonRect.height / 2,
+        })
+      } else if (distance >= 120 && isFleeing) {
+        // Réinitialiser la position si la souris s'éloigne
+        setTimeout(() => {
+          setIsFleeing(false)
+          setNoButtonPosition({ x: 0, y: 0 })
+        }, 500)
+      }
+    }
+
+    const container = containerRef.current
+    if (container) {
+      container.addEventListener('mousemove', handleMouseMove)
+      return () => {
+        container.removeEventListener('mousemove', handleMouseMove)
+      }
+    }
+  }, [response, showIntro, isFleeing])
+
+  const handleNoClick = (e) => {
+    // Si le bouton fuit, empêcher le clic
+    if (isFleeing) {
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
+    handleResponse('no')
   }
 
   if (showIntro) {
@@ -136,7 +210,7 @@ function FinalScreen({ className = '' }) {
         <p className="text-base text-gray-600 mb-8 italic">
           (J'ai fait tout ce jeu juste pour te poser cette question... 😏)
         </p>
-        <div className="space-y-4 max-w-md mx-auto">
+        <div className="space-y-4 max-w-md mx-auto relative" ref={containerRef} style={{ minHeight: '200px' }}>
           <button
             onClick={() => handleResponse('yes')}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
@@ -150,8 +224,48 @@ function FinalScreen({ className = '' }) {
             Peut-être
           </button>
           <button
-            onClick={() => handleResponse('no')}
-            className="w-full bg-gray-200 text-gray-700 font-semibold py-4 px-8 rounded-xl hover:bg-gray-300 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+            ref={noButtonRef}
+            onClick={handleNoClick}
+            className={`w-full bg-gray-200 text-gray-700 font-semibold py-4 px-8 rounded-xl hover:bg-gray-300 transition-all duration-500 transform hover:scale-105 shadow-lg text-lg ${
+              isFleeing ? 'cursor-not-allowed' : ''
+            }`}
+            style={{
+              position: isFleeing ? 'absolute' : 'relative',
+              left: isFleeing ? `${noButtonPosition.x}px` : 'auto',
+              top: isFleeing ? `${noButtonPosition.y}px` : 'auto',
+              zIndex: isFleeing ? 50 : 1,
+            }}
+            onMouseEnter={(e) => {
+              if (!isFleeing && !response && !showIntro) {
+                // Déclencher la fuite dès que la souris entre
+                const button = e.currentTarget
+                const container = containerRef.current
+                if (button && container) {
+                  const buttonRect = button.getBoundingClientRect()
+                  const containerRect = container.getBoundingClientRect()
+                  const mouseX = e.clientX - containerRect.left
+                  const mouseY = e.clientY - containerRect.top
+                  
+                  const buttonCenterX = buttonRect.left - containerRect.left + buttonRect.width / 2
+                  const buttonCenterY = buttonRect.top - containerRect.top + buttonRect.height / 2
+                  
+                  const angle = Math.atan2(mouseY - buttonCenterY, mouseX - buttonCenterX)
+                  const fleeDistance = 150
+                  
+                  const maxX = containerRect.width - buttonRect.width - 20
+                  const maxY = containerRect.height - buttonRect.height - 20
+                  
+                  const newX = Math.max(20, Math.min(maxX, buttonCenterX - Math.cos(angle) * fleeDistance))
+                  const newY = Math.max(20, Math.min(maxY, buttonCenterY - Math.sin(angle) * fleeDistance))
+                  
+                  setIsFleeing(true)
+                  setNoButtonPosition({
+                    x: newX - buttonRect.width / 2,
+                    y: newY - buttonRect.height / 2,
+                  })
+                }
+              }
+            }}
           >
             Non
           </button>
