@@ -36,10 +36,10 @@ function ClickGameScreen({ onNext, className = '' }) {
   }
 
   const getMessage = () => {
-    if (score >= 30) return "Wow, tu es vraiment rapide ! 🔥"
-    if (score >= 20) return "Pas mal du tout ! 😊"
-    if (score >= 10) return "Bien joué ! 👍"
-    return "Tu peux faire mieux ! 😉"
+    if (score >= 30) return "Wow, tu es vraiment rapide ! 🔥\n\n(J'adore quand tu es motivée comme ça 😏)"
+    if (score >= 20) return "Pas mal du tout ! 😊\n\n(Tu as de la réactivité, j'aime bien ça)"
+    if (score >= 10) return "Bien joué ! 👍\n\n(On sent que tu es là, c'est cool)"
+    return "Tu peux faire mieux ! 😉\n\n(Allez, montre-moi ce dont tu es capable)"
   }
 
   if (showIntro) {
@@ -49,11 +49,14 @@ function ClickGameScreen({ onNext, className = '' }) {
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
             Premier défi
           </h2>
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-700 mb-4">
             Clique sur le cœur le plus vite possible !
           </p>
-          <p className="text-base text-gray-600 mb-8">
-            (On va voir si tu es rapide 😏)
+          <p className="text-base text-gray-600 mb-2">
+            (On va voir si tu es rapide... et si tu es motivée 😏)
+          </p>
+          <p className="text-sm text-gray-500 mb-8 italic">
+            Plus tu cliques, plus je suis content... c'est simple non ? 😉
           </p>
           <button
             onClick={handleStart}
@@ -73,7 +76,7 @@ function ClickGameScreen({ onNext, className = '' }) {
           <p className="text-3xl font-bold text-pink-600 mb-4">
             Score final : {score}
           </p>
-          <p className="text-xl text-gray-700 mb-6">{getMessage()}</p>
+          <p className="text-xl text-gray-700 mb-6 whitespace-pre-line">{getMessage()}</p>
           <button
             onClick={() => onNext(score)}
             className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold py-3 px-8 rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg"

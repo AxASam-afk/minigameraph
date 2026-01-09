@@ -28,6 +28,15 @@ const questions = [
       "Tout ça à la fois",
     ],
   },
+  {
+    question: "Tu préfères quel type de date ?",
+    options: [
+      "Quelque chose d'original et surprenant",
+      "Un truc classique mais cosy",
+      "Un truc actif et fun",
+      "Je suis ouverte à tout... 😏",
+    ],
+  },
 ]
 
 function QuizScreen({ onNext, className = '' }) {
@@ -52,7 +61,7 @@ function QuizScreen({ onNext, className = '' }) {
   }
 
   const getResultMessage = () => {
-    return "C'était juste pour rigoler de toute façon ! 😄"
+    return "Parfait ! J'ai appris des trucs sur toi...\n\n(C'est toujours utile de connaître tes goûts 😏)"
   }
 
   if (showIntro) {
@@ -62,11 +71,14 @@ function QuizScreen({ onNext, className = '' }) {
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
             Un petit quiz
           </h2>
-          <p className="text-lg text-gray-700 mb-6">
-            Maintenant, quelques questions...
+          <p className="text-lg text-gray-700 mb-4">
+            Maintenant, quelques questions pour te connaître un peu mieux...
           </p>
-          <p className="text-base text-gray-600 mb-8">
+          <p className="text-base text-gray-600 mb-2">
             (Ne t'inquiète pas, c'est pas un examen !)
+          </p>
+          <p className="text-sm text-gray-500 mb-8 italic">
+            (Mais je note tes réponses quand même... pour plus tard 😉)
           </p>
           <button
             onClick={() => setShowIntro(false)}
@@ -84,7 +96,7 @@ function QuizScreen({ onNext, className = '' }) {
       <div className={`bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8 border border-pink-200 ${className}`}>
         <div className="text-center fade-in">
           <p className="text-3xl mb-4">✨</p>
-          <p className="text-2xl font-bold text-gray-800 mb-6">
+          <p className="text-2xl font-bold text-gray-800 mb-6 whitespace-pre-line">
             {getResultMessage()}
           </p>
           <button

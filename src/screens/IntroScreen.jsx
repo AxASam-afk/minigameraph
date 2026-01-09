@@ -11,8 +11,11 @@ function IntroScreen({ onNext, className = '' }) {
         <p className="text-lg md:text-xl text-gray-700 mb-2 leading-relaxed">
           J'ai préparé un petit truc pour toi...
         </p>
-        <p className="text-base md:text-lg text-gray-600 mb-8">
-          (C'est parti pour quelques minutes de fun 😏)
+        <p className="text-base md:text-lg text-gray-600 mb-4">
+          (J'ai passé un peu de temps dessus, alors sois gentille 😏)
+        </p>
+        <p className="text-base md:text-lg text-gray-500 mb-8 italic">
+          Promis, c'est plus fun qu'un message WhatsApp classique ✨
         </p>
         <button
           onClick={onNext}

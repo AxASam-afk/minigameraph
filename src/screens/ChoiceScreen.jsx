@@ -42,11 +42,14 @@ function ChoiceScreen({ onNext, className = '' }) {
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
             Dernier petit jeu
           </h2>
-          <p className="text-lg text-gray-700 mb-6">
-            Avant la fin...
+          <p className="text-lg text-gray-700 mb-4">
+            Avant la fin... un dernier choix important
           </p>
-          <p className="text-base text-gray-600 mb-8">
+          <p className="text-base text-gray-600 mb-2">
             (On y est presque !)
+          </p>
+          <p className="text-sm text-gray-500 mb-8 italic">
+            (Choisis bien, ça pourrait servir... 😏)
           </p>
           <button
             onClick={() => setShowIntro(false)}
@@ -70,8 +73,11 @@ function ChoiceScreen({ onNext, className = '' }) {
           <p className="text-lg text-gray-600 mb-6">
             {choices[selected].description}
           </p>
-          <p className="text-gray-700 mb-6">
-            Bon choix ! On note ça quelque part... 😉
+          <p className="text-gray-700 mb-4">
+            Bon choix ! J'aime bien ton style 😉
+          </p>
+          <p className="text-sm text-gray-600 mb-6 italic">
+            (C'est noté dans un coin de ma tête... pour plus tard 😏)
           </p>
           <button
             onClick={() => onNext(choices[selected].title)}
@@ -89,8 +95,11 @@ function ChoiceScreen({ onNext, className = '' }) {
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-800">
         Choisis ce qui te fait envie
       </h2>
-      <p className="text-center text-gray-600 mb-8">
+      <p className="text-center text-gray-600 mb-2">
         (Juste pour voir tes goûts... 😏)
+      </p>
+      <p className="text-center text-sm text-gray-500 mb-8 italic">
+        (Et qui sait, peut-être qu'on pourra tester ça ensemble un jour 😉)
       </p>
       <div className="grid grid-cols-2 gap-4">
         {choices.map((choice, index) => (

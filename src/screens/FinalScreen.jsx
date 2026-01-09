@@ -20,11 +20,14 @@ function FinalScreen({ className = '' }) {
           <div className="mb-6">
             <span className="text-6xl inline-block animate-bounce">✨</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
             Alors Madame...
           </h2>
-          <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-700 mb-4 leading-relaxed">
             Est-ce que ça te dirait qu'on aille boire un verre ensemble ?
+          </p>
+          <p className="text-base text-gray-600 mb-8 italic">
+            (J'ai fait tout ce jeu juste pour te poser cette question... 😏)
           </p>
           <button
             onClick={() => setShowIntro(false)}
@@ -45,11 +48,14 @@ function FinalScreen({ className = '' }) {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
             Génial !
           </h2>
-          <p className="text-xl text-gray-700 mb-6">
+          <p className="text-xl text-gray-700 mb-4">
             Je suis content que ça te fasse plaisir ! 😊
           </p>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-600 mb-4">
             On se contacte pour organiser ça alors ?
+          </p>
+          <p className="text-base text-gray-500 mb-8 italic">
+            (Le jeu a payé... j'avais raison de croire en toi 😏)
           </p>
           <div className="space-y-3">
             <p className="text-2xl">✨</p>
@@ -121,11 +127,14 @@ function FinalScreen({ className = '' }) {
         <div className="mb-6">
           <p className="text-6xl animate-bounce">✨</p>
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
           Alors Madame...
         </h2>
-        <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+        <p className="text-xl md:text-2xl text-gray-700 mb-4 leading-relaxed">
           Est-ce que ça te dirait qu'on aille boire un verre ensemble ?
+        </p>
+        <p className="text-base text-gray-600 mb-8 italic">
+          (J'ai fait tout ce jeu juste pour te poser cette question... 😏)
         </p>
         <div className="space-y-4 max-w-md mx-auto">
           <button
