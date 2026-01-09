@@ -1,6 +1,6 @@
-# Mini-Jeu pour Raphaëlle
+# Mini-Jeu pour Madame
 
-Une application web interactive et ludique créée avec Next.js.
+Une application web interactive et ludique créée avec React et Vite.
 
 ## 🚀 Déploiement sur Vercel
 
@@ -13,7 +13,7 @@ Une application web interactive et ludique créée avec Next.js.
    ```bash
    npm run dev
    ```
-   Ouvrez [http://localhost:3000](http://localhost:3000)
+   Ouvrez [http://localhost:5173](http://localhost:5173)
 
 3. **Déployer sur Vercel**
    - Connectez votre repository GitHub à Vercel
@@ -25,13 +25,15 @@ Une application web interactive et ludique créée avec Next.js.
 
 ## 📁 Structure du projet
 
-- `app/` - Pages et layout Next.js (App Router)
-- `components/` - Composants React réutilisables
-- `lib/` - Utilitaires et logique métier
-- `public/` - Assets statiques (si nécessaire)
+- `src/` - Code source React
+  - `App.jsx` - Composant principal avec gestion des écrans
+  - `screens/` - Composants d'écrans (Intro, Games, Final)
+  - `index.css` - Styles globaux et animations
+- `index.html` - Point d'entrée HTML
 
 ## 🎮 Fonctionnalités
 
+- Système d'écrans sans routing (transitions fluides)
 - Mini-jeu de clic rapide
 - Quiz interactif
 - Choix d'activités
@@ -41,8 +43,14 @@ Une application web interactive et ludique créée avec Next.js.
 
 ## 🛠️ Technologies
 
-- Next.js 14 (App Router)
 - React 18
-- TypeScript
+- Vite
 - Tailwind CSS
+- JavaScript (pas de TypeScript)
 
+## 🎨 Transitions
+
+- Fade in/out
+- Slide (gauche/droite)
+- Scale
+- Animations CSS personnalisées
