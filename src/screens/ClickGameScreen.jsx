@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import HeartParticles from '../components/HeartParticles'
 
 function ClickGameScreen({ onNext, className = '' }) {
   const [score, setScore] = useState(0)
@@ -7,6 +8,8 @@ function ClickGameScreen({ onNext, className = '' }) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
   const [showResult, setShowResult] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [particleTrigger, setParticleTrigger] = useState(0)
+  const [clickPosition, setClickPosition] = useState(null)
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {
@@ -26,12 +29,21 @@ function ClickGameScreen({ onNext, className = '' }) {
     setShowResult(false)
   }
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (isActive) {
       setScore(score + 1)
       const newX = Math.random() * 80 + 10
       const newY = Math.random() * 70 + 15
       setPosition({ x: newX, y: newY })
+      
+      // Déclencher l'effet de particules à la position du clic
+      if (e && e.currentTarget) {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = ((e.clientX - rect.left) / rect.width) * 100
+        const y = ((e.clientY - rect.top) / rect.height) * 100
+        setClickPosition({ x, y })
+        setParticleTrigger(prev => prev + 1)
+      }
     }
   }
 
@@ -94,8 +106,9 @@ function ClickGameScreen({ onNext, className = '' }) {
         Clique sur le cœur !
       </h2>
       <div className="relative h-64 md:h-96 bg-gradient-to-br from-pink-100 to-purple-100 rounded-xl overflow-hidden">
+        <HeartParticles trigger={particleTrigger} position={clickPosition} />
         <div
-          className="absolute cursor-pointer transition-all duration-200 hover:scale-110"
+          className="absolute cursor-pointer transition-all duration-200 hover:scale-110 z-10"
           style={{
             left: `${position.x}%`,
             top: `${position.y}%`,
@@ -105,10 +118,10 @@ function ClickGameScreen({ onNext, className = '' }) {
         >
           <span className="text-6xl md:text-8xl animate-bounce">❤️</span>
         </div>
-        <div className="absolute top-4 left-4 bg-white/80 rounded-lg px-4 py-2">
+        <div className="absolute top-4 left-4 bg-white/80 rounded-lg px-4 py-2 z-10">
           <p className="text-2xl font-bold text-pink-600">Score: {score}</p>
         </div>
-        <div className="absolute top-4 right-4 bg-white/80 rounded-lg px-4 py-2">
+        <div className="absolute top-4 right-4 bg-white/80 rounded-lg px-4 py-2 z-10">
           <p className="text-xl font-semibold text-purple-600">{timeLeft}s</p>
         </div>
       </div>
