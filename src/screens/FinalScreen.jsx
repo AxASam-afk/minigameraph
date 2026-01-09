@@ -7,6 +7,7 @@ function FinalScreen({ className = '' }) {
   const [isFleeing, setIsFleeing] = useState(false)
   const noButtonRef = useRef(null)
   const containerRef = useRef(null)
+  const animationFrameRef = useRef(null)
 
   const handleResponse = (res) => {
     setResponse(res)
