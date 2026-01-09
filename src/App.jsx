@@ -22,23 +22,44 @@ function App() {
     choiceAnswer: null,
   })
 
-  // Restaurer la progression depuis localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('minigame_progress')
-    if (saved) {
-      try {
-        const progress = JSON.parse(saved)
-        if (progress.currentScreen && progress.currentScreen !== SCREENS.INTRO) {
-          setCurrentScreen(progress.currentScreen)
-          setGameProgress(progress.gameProgress || gameProgress)
-        }
-      } catch (e) {
-        console.error('Erreur lors du chargement de la progression', e)
-      }
-    }
-  }, [])
+  // Ne pas restaurer automatiquement - forcer le passage par tous les jeux
+  // L'utilisateur doit toujours commencer depuis le début
 
   const handleNextScreen = (nextScreen, progressUpdate = {}) => {
+    // Définir l'ordre strict des écrans
+    const screenOrder = [SCREENS.INTRO, SCREENS.CLICK_GAME, SCREENS.QUIZ, SCREENS.CHOICE, SCREENS.FINAL]
+    const currentIndex = screenOrder.indexOf(currentScreen)
+    const nextIndex = screenOrder.indexOf(nextScreen)
+    
+    // Ne permettre QUE le passage à l'écran suivant immédiat dans l'ordre
+    if (nextIndex !== currentIndex + 1) {
+      console.warn('Tentative de sauter une étape - bloquée')
+      return
+    }
+    
+    // Pour l'écran final, vérifier STRICTEMENT que tous les jeux sont complétés
+    if (nextScreen === SCREENS.FINAL) {
+      const newProgress = { ...gameProgress, ...progressUpdate }
+      
+      // Vérifier le jeu de clic (score doit être défini, même si 0)
+      if (newProgress.clickScore === undefined || newProgress.clickScore === null) {
+        console.warn('Le jeu de clic doit être complété avant de continuer')
+        return
+      }
+      
+      // Vérifier le quiz (doit avoir 4 réponses)
+      if (!newProgress.quizAnswers || newProgress.quizAnswers.length < 4) {
+        console.warn('Le quiz doit être complété (4 questions) avant de continuer')
+        return
+      }
+      
+      // Vérifier le choix
+      if (!newProgress.choiceAnswer) {
+        console.warn('Le choix doit être fait avant de continuer')
+        return
+      }
+    }
+    
     setTransitioning(true)
     
     setTimeout(() => {
@@ -46,7 +67,7 @@ function App() {
       const newProgress = { ...gameProgress, ...progressUpdate }
       setGameProgress(newProgress)
       
-      // Sauvegarder dans localStorage
+      // Sauvegarder dans localStorage (mais ne pas restaurer automatiquement au chargement)
       localStorage.setItem('minigame_progress', JSON.stringify({
         currentScreen: nextScreen,
         gameProgress: newProgress,
