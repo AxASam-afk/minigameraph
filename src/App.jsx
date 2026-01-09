@@ -4,6 +4,7 @@ import ClickGameScreen from './screens/ClickGameScreen'
 import QuizScreen from './screens/QuizScreen'
 import ChoiceScreen from './screens/ChoiceScreen'
 import FinalScreen from './screens/FinalScreen'
+import AnimatedBackground from './components/AnimatedBackground'
 
 const SCREENS = {
   INTRO: 'intro',
@@ -134,8 +135,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <AnimatedBackground />
+      <div className="max-w-2xl w-full relative z-10">
         {renderScreen()}
       </div>
     </div>
